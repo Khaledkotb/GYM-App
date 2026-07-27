@@ -6,43 +6,81 @@ export default function MemberForm({
   onCancel,
 }) {
   return (
-    <form onSubmit={onSubmit} className="members-card" style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-      <h3 style={{ margin: 0 }}>{editingId ? "Edit Member" : "Add New Member"}</h3>
+    <>
+      <style>{`
+        .member-form-card {
+          display: flex;
+          flex-direction: column;
+          gap: 14px;
+        }
 
-      <label style={{ display: "block" }}>
-        <span className="muted" style={{ fontSize: 12 }}>Name</span>
-        <input type="text" placeholder="Name" value={newMember.name} onChange={(e) => onChange({ ...newMember, name: e.target.value })} className="members-input" aria-label="Member name" />
-      </label>
+        .member-form-label {
+          display: block;
+        }
 
-      <label style={{ display: "block" }}>
-        <span className="muted" style={{ fontSize: 12 }}>Email</span>
-        <input type="email" placeholder="Email" value={newMember.email} onChange={(e) => onChange({ ...newMember, email: e.target.value })} className="members-input" aria-label="Member email" />
-      </label>
+        .member-form-label span {
+          display: block;
+          font-size: 12px;
+          margin-bottom: 4px;
+        }
 
-      <label style={{ display: "block" }}>
-        <span className="muted" style={{ fontSize: 12 }}>Phone</span>
-        <input type="text" placeholder="Phone" value={newMember.phone} onChange={(e) => onChange({ ...newMember, phone: e.target.value })} className="members-input" aria-label="Member phone" />
-      </label>
+        .member-form-actions {
+          display: flex;
+          justify-content: flex-end;
+          gap: 8px;
+          flex-wrap: wrap;
+        }
 
-      <label style={{ display: "block" }}>
-        <span className="muted" style={{ fontSize: 12 }}>Expiry</span>
-        <input type="date" placeholder="Expiry" value={newMember.expiry || ""} onChange={(e) => onChange({ ...newMember, expiry: e.target.value })} className="members-input" aria-label="Membership expiry" />
-      </label>
+        .member-form-actions .btn {
+          min-width: 110px;
+        }
 
-      <label style={{ display: "block" }}>
-        <span className="muted" style={{ fontSize: 12 }}>Status</span>
-        <select value={newMember.status} onChange={(e) => onChange({ ...newMember, status: e.target.value })} className="members-select" aria-label="Member status">
-          <option value="Active">Active</option>
-          <option value="Expired">Expired</option>
-        </select>
-      </label>
+        @media (max-width: 640px) {
+          .member-form-actions {
+            flex-direction: column-reverse;
+          }
 
-      <div style={{ display: "flex", justifyContent: "flex-end" }}>
-        <button type="submit" className="btn btn-success" aria-label={editingId ? "Update member" : "Save member"}>{editingId ? "Update" : "Save"}</button>
-        {onCancel && (
-          <button type="button" className="btn btn-outline" onClick={onCancel} style={{ marginLeft: 8 }}>Cancel</button>
-        )}
-      </div>
-    </form>
+          .member-form-actions .btn {
+            width: 100%;
+            min-width: 0;
+          }
+        }
+      `}</style>
+
+      <form onSubmit={onSubmit} className="members-card member-form-card">
+        <h3 style={{ margin: 0 }}>{editingId ? "Edit Member" : "Add New Member"}</h3>
+
+        <label className="member-form-label">
+          <span className="muted">Name</span>
+          <input type="text" placeholder="Name" value={newMember.name} onChange={(e) => onChange({ ...newMember, name: e.target.value })} className="members-input" aria-label="Member name" minLength={2} required />
+        </label>
+
+        <label className="member-form-label">
+          <span className="muted">Email</span>
+          <input type="email" placeholder="Email" value={newMember.email} onChange={(e) => onChange({ ...newMember, email: e.target.value })} className="members-input" aria-label="Member email" required />
+        </label>
+
+        <label className="member-form-label">
+          <span className="muted">Phone</span>
+          <input type="tel" placeholder="Phone" value={newMember.phone} onChange={(e) => onChange({ ...newMember, phone: e.target.value })} className="members-input" aria-label="Member phone" pattern="^\\+?[0-9\\s()-]{7,15}$" required />
+        </label>
+
+        <label className="member-form-label">
+          <span className="muted">Expiry</span>
+          <input type="date" placeholder="Expiry" value={newMember.expiry || ""} onChange={(e) => onChange({ ...newMember, expiry: e.target.value })} className="members-input" aria-label="Membership expiry" required />
+        </label>
+
+        <div style={{ fontSize: 12, color: "#64748b" }}>
+          Status is calculated automatically from the expiry date.
+        </div>
+
+        <div className="member-form-actions">
+          <button type="submit" className="btn btn-success" aria-label={editingId ? "Update member" : "Save member"}>{editingId ? "Update" : "Save"}</button>
+          {onCancel && (
+            <button type="button" className="btn btn-outline" onClick={onCancel}>Cancel</button>
+          )}
+        </div>
+      </form>
+    </>
   );
 }
