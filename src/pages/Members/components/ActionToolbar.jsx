@@ -1,4 +1,6 @@
-export default function ActionToolbar({ onToggleForm, showForm }) {
+export default function ActionToolbar({ onToggleForm, showForm, isAddDisabled = false, disabledReason }) {
+  const isDisabled = isAddDisabled && !showForm;
+
   return (
     <>
       <style>{`
@@ -36,6 +38,8 @@ export default function ActionToolbar({ onToggleForm, showForm }) {
             className="btn btn-primary"
             aria-pressed={showForm}
             aria-label={showForm ? "Cancel add member" : "Add member"}
+            disabled={isDisabled}
+            title={isDisabled ? disabledReason : undefined}
           >
             {showForm ? "Cancel" : "+ Add Member"}
           </button>

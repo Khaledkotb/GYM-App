@@ -130,6 +130,7 @@ function Members() {
   const [notice, setNotice] = useState(null);
   const [newMember, setNewMember] = useState(emptyMember);
   const [isLoading, setIsLoading] = useState(true);
+  const isAtPlanLimit = members.length >= PLAN_LIMIT;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
 
@@ -184,8 +185,14 @@ function Members() {
       resetForm();
       return;
     }
+
+    if (isAtPlanLimit) {
+      setNotice({ type: "error", title: "Limit reached", message: `Plan limit reached. You can add up to ${PLAN_LIMIT} members.` });
+      return;
+    }
+
     setShowForm(true);
-  }, [resetForm, showForm]);
+  }, [isAtPlanLimit, resetForm, showForm]);
 
   const handleSearch = useCallback((e) => {
     setSearchTerm(e.target.value);
@@ -293,7 +300,12 @@ function Members() {
 
       <div className="members-card" style={{ padding: "28px", background: "linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%)" }}>
         <PageHeader title="Members" subtitle="Manage your gym members and subscriptions." count={members.length}>
-          <ActionToolbar onToggleForm={handleToggleForm} showForm={showForm} />
+          <ActionToolbar
+            onToggleForm={handleToggleForm}
+            showForm={showForm}
+            isAddDisabled={isAtPlanLimit}
+            disabledReason={`Plan limit reached. You can add up to ${PLAN_LIMIT} members.`}
+          />
         </PageHeader>
 
         <NoticeBanner notice={notice} />
