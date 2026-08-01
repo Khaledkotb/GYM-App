@@ -1,9 +1,12 @@
 import { memo } from "react";
 
 const MembersTable = ({ members, onView, onEdit, onDelete, getStatusStyle }) => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
   const renderMemberRows = () =>
     members.map((member) => {
-      const diff = member.expiry ? Date.parse(member.expiry) - Date.now() : NaN;
+      const diff = member.expiry ? Date.parse(member.expiry) - today.getTime() : NaN;
       const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
       const daysLeft = member.expiry
         ? isNaN(days)
@@ -119,7 +122,7 @@ const MembersTable = ({ members, onView, onEdit, onDelete, getStatusStyle }) => 
           </thead>
           <tbody>
             {members.map((member) => {
-              const diff = member.expiry ? Date.parse(member.expiry) - Date.now() : NaN;
+              const diff = member.expiry ? Date.parse(member.expiry) - today.getTime() : NaN;
               const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
               const daysLeft = member.expiry
                 ? isNaN(days)
